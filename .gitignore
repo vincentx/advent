@@ -1,0 +1,41 @@
+# ignore compiled code
+bin/
+obj/
+*.dll
+*.exe
+*.pdb
+
+# ignore user-specific files
+*.user
+*.suo
+*.cache
+*.log
+*.vspscc
+*.vssscc
+*.sln.docstates
+
+# ignore NuGet packages
+packages/
+
+# ignore build results
+[Dd]ebug/
+[Rr]elease/
+x64/
+build/
+[Bb]in/
+[Oo]bj/
+[Tt]est[Rr]esult*/
+[Tt]est[Rr]un[Rr]er*/
+
+# ignore Resharper files
+_ReSharper*/
+.idea/
+
+.DS_Store
+
+# ignore Visual Studio code analysis files
+*.CodeAnalysisLog.xml
+.vs
+
+!src/kernel.tests/skills/webbrowser.dll
+!src/kernel.tests/skills/Microsoft.Playwright.dll
