@@ -1,17 +1,26 @@
+using System.Text.Json;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.SemanticKernel.CoreSkills;
+using Microsoft.SemanticKernel.Orchestration;
+using Xunit.Abstractions;
 
 namespace Advent.Kernel.Factory;
 
 public class KernelTests
 {
+    private readonly ITestOutputHelper _testOutputHelper;
     private readonly SemanticKernelFactory _factory;
 
-    public KernelTests()
+    public KernelTests(ITestOutputHelper testOutputHelper)
     {
+        _testOutputHelper = testOutputHelper;
         var folder = Path.GetFullPath($"{Directory.GetCurrentDirectory()}/../../../skills");
-        _factory = new HostBuilder().ConfigureAdventKernelDefaults(folder).Build().Services
+        _factory = new HostBuilder()
+            .ConfigureServices(services => { services.AddSingleton<ILogger>(NullLogger.Instance); })
+            .ConfigureAdventKernelDefaults(folder).Build().Services
             .GetService<SemanticKernelFactory>()!;
     }
 
@@ -46,5 +55,19 @@ public class KernelTests
         var skills = _factory.Create(new()
             { Completion = new() { Label = "label", Model = "model", Key = "api-key" } }).Skills;
         Assert.True(skills.HasFunction("WebBrowserSkill", "OpenBrowserAsync"));
+    }
+
+    [Fact]
+    public void should()
+    {
+        var variables = new ContextVariables();
+        variables["INPUT"] = "input";
+
+        string json = JsonSerializer.Serialize(variables, new JsonSerializerOptions()
+        {
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+        });
+// Output the JSON string
+        _testOutputHelper.WriteLine(json);
     }
 }

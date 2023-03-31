@@ -11,9 +11,9 @@ public class ApiKeyConfig
 
     public class Config
     {
-        public string Model { get; init; } = string.Empty;
-        public string Label { get; init; } = string.Empty;
-        public string Key { get; init; } = string.Empty;
+        public string Model { get; set; } = string.Empty;
+        public string Label { get; set; } = string.Empty;
+        public string Key { get; set; } = string.Empty;
 
         public bool IsValid() =>
             !string.IsNullOrEmpty(Label) && !string.IsNullOrEmpty(Model) && !string.IsNullOrEmpty(Key);

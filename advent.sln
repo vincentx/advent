@@ -7,6 +7,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "kernel", "src\kernel\kernel
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "kernel.tests", "src\kernel.tests\kernel.tests.csproj", "{2354D4C8-8B4C-4805-9A44-1C9F3917C985}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{6B2215E1-32C6-4C18-BF78-F931ABDF03E3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "kernel.api", "src\kernel.api\kernel.api.csproj", "{00FA0F7E-B4DD-4734-9A19-A4137023A340}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +28,12 @@ Global
 		{2354D4C8-8B4C-4805-9A44-1C9F3917C985}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2354D4C8-8B4C-4805-9A44-1C9F3917C985}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2354D4C8-8B4C-4805-9A44-1C9F3917C985}.Release|Any CPU.Build.0 = Release|Any CPU
+		{00FA0F7E-B4DD-4734-9A19-A4137023A340}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{00FA0F7E-B4DD-4734-9A19-A4137023A340}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{00FA0F7E-B4DD-4734-9A19-A4137023A340}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{00FA0F7E-B4DD-4734-9A19-A4137023A340}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{00FA0F7E-B4DD-4734-9A19-A4137023A340} = {6B2215E1-32C6-4C18-BF78-F931ABDF03E3}
 	EndGlobalSection
 EndGlobal
