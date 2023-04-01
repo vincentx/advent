@@ -37,8 +37,7 @@ public class KernelExtensionTests
     {
         var planner = new PlannerSkill(Plan("key", "id", "goal", false, false, ""),
             Plan("key", "id", "goal", true, true, ""));
-        var result = await CreateKernel(typeof(TestNativeSkill), planner)
-            .InvokeEndToEnd(new(), 3);
+        await new DefaultPlanExecutor().Execute(CreateKernel(typeof(TestNativeSkill), planner), new(), 3);
 
         Assert.True(planner.Planned);
         Assert.Equal(1, planner.Executed);
@@ -54,8 +53,8 @@ public class KernelExtensionTests
             Plan("key", "id", "goal", false, true, ""),
             Plan("key", "id", "goal", true, true, "")
         );
-        var result = await CreateKernel(typeof(TestNativeSkill), planner)
-            .InvokeEndToEnd(new(), 3);
+
+        await new DefaultPlanExecutor().Execute(CreateKernel(typeof(TestNativeSkill), planner), new(), 3);
 
         Assert.True(planner.Planned);
         Assert.Equal(3, planner.Executed);
@@ -71,8 +70,8 @@ public class KernelExtensionTests
             Plan("key", "id", "goal", false, true, ""),
             Plan("key", "id", "goal", true, true, "")
         );
-        var result = await CreateKernel(typeof(TestNativeSkill), planner)
-            .InvokeEndToEnd(new(), 3);
+        await new DefaultPlanExecutor().Execute(CreateKernel(typeof(TestNativeSkill), planner), new(), 3);
+
 
         Assert.True(planner.Planned);
         Assert.Equal(2, planner.Executed);

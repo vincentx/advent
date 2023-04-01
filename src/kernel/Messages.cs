@@ -5,13 +5,13 @@ namespace Advent.Kernel;
 public class Message
 {
     public IEnumerable<KeyValuePair<string, string>> Variables { get; init; } = new ContextVariables();
-    public IList<FunctionRef>? Pipeline { get; init; } = null;
-    public IList<string>? Skills { get; init; } = null;
+    public IList<FunctionRef>? Pipeline { get; init; } = new List<FunctionRef>();
+    public IList<string>? Skills { get; init; } = new List<string>();
 
     public class FunctionRef
     {
-        public string Skill { get; init; }
-        public string Name { get; init; }
+        public string Skill { get; init; } = "PlannerSkill";
+        public string Name { get; init; } = "CreatePlan";
     }
 
     public static Message Ask(string question, ContextVariables context)

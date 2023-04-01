@@ -1,4 +1,3 @@
-using System.Text.Json;
 using Advent.Kernel.Factory;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -26,6 +25,7 @@ public static class Extensions
         services.AddSingleton<NativeSkillsImporter>();
         services.AddSingleton<SemanticSkillsImporter>();
         services.AddSingleton<SemanticKernelFactory>();
+        services.AddSingleton(typeof(IPlanExecutor), typeof(DefaultPlanExecutor));
     }
 
     public static IList<FunctionView> ToSkills(this IKernel kernel)
@@ -39,39 +39,4 @@ public static class Extensions
         await kernel.RunAsync(message.Variables.ToContext(),
             (message.Pipeline?.Select(_ => kernel.Skills.GetFunction(_.Skill, _.Name)) ?? Array.Empty<ISKFunction>())
             .ToArray());
-
-    public static async Task<SKContext> InvokeEndToEnd(this IKernel kernel, Message message, int iterations) =>
-        await ExecutePlan(kernel, await kernel.RunAsync(message.Variables.ToContext(), kernel.CreatePlan()),
-            iterations);
-
-    private static async Task<SKContext> ExecutePlan(IKernel kernel, SKContext plan, int iterations)
-    {
-        var iteration = 0;
-        var executePlan = kernel.ExecutePlan();
-
-        var result = await kernel.RunAsync(plan.Variables, executePlan);
-
-        while (!result.Variables.ToPlan().IsComplete &&
-               result.Variables.ToPlan().IsSuccessful &&
-               iteration < iterations - 1)
-        {
-            result = await kernel.RunAsync(result.Variables, executePlan);
-            iteration++;
-        }
-
-        return result;
-    }
-
-    private static ISKFunction CreatePlan(this IKernel kernel) =>
-        kernel.Skills.GetFunction("plannerskill", "createplan");
-
-    private static ISKFunction ExecutePlan(this IKernel kernel) =>
-        kernel.Skills.GetFunction("plannerskill", "executeplan");
-
-    private static ContextVariables ToContext(this IEnumerable<KeyValuePair<string, string>> variables)
-    {
-        var context = new ContextVariables();
-        foreach (var variable in variables) context[variable.Key] = variable.Value;
-        return context;
-    }
 }
