@@ -56,18 +56,4 @@ public class KernelTests
             { Completion = new() { Label = "label", Model = "model", Key = "api-key" } }).Skills;
         Assert.True(skills.HasFunction("WebBrowserSkill", "OpenBrowserAsync"));
     }
-
-    [Fact]
-    public void should()
-    {
-        var variables = new ContextVariables();
-        variables["INPUT"] = "input";
-
-        string json = JsonSerializer.Serialize(variables, new JsonSerializerOptions()
-        {
-            PropertyNamingPolicy = JsonNamingPolicy.CamelCase
-        });
-// Output the JSON string
-        _testOutputHelper.WriteLine(json);
-    }
 }
