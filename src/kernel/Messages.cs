@@ -5,7 +5,8 @@ namespace Advent.Kernel;
 public class Message
 {
     public IEnumerable<KeyValuePair<string, string>> Variables { get; init; } = new ContextVariables();
-    public IList<FunctionRef>? Pipeline { get; init; } = new List<FunctionRef>();
+    public IList<FunctionRef>? Pipeline { get; init; } = null;
+    public IList<string>? Skills { get; init; } = null;
 
     public class FunctionRef
     {

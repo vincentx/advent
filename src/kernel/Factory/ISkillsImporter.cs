@@ -4,5 +4,5 @@ namespace Advent.Kernel.Factory;
 
 public interface ISkillsImporter
 {
-    void ImportSkills(IKernel kernel);
+    void ImportSkills(IKernel kernel, IList<string> skills);
 }

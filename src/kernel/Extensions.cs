@@ -1,3 +1,4 @@
+using System.Text.Json;
 using Advent.Kernel.Factory;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -49,6 +50,7 @@ public static class Extensions
         var executePlan = kernel.ExecutePlan();
 
         var result = await kernel.RunAsync(plan.Variables, executePlan);
+
         while (!result.Variables.ToPlan().IsComplete &&
                result.Variables.ToPlan().IsSuccessful &&
                iteration < iterations - 1)

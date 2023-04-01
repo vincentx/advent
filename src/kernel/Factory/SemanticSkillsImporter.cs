@@ -1,3 +1,4 @@
+using System.Collections;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.KernelExtensions;
 
@@ -12,20 +13,23 @@ public class SemanticSkillsImporter : ISkillsImporter
         _folder = skillOptions.SemanticSkillsFolder;
     }
 
-    public void ImportSkills(IKernel kernel)
+    public void ImportSkills(IKernel kernel, IList<string> skills)
     {
-        kernel.RegisterSemanticSkills(_folder);
+        kernel.RegisterSemanticSkills(_folder, skills);
     }
 }
 
 internal static partial class Extensions
 {
-    internal static IKernel RegisterSemanticSkills(this IKernel kernel, string skill)
+    internal static void RegisterSemanticSkills(this IKernel kernel, string skill, IList<string> skills)
     {
         foreach (var prompt in Directory.EnumerateFiles(skill, "*.txt", SearchOption.AllDirectories)
                      .Select(_ => new FileInfo(_)))
-            kernel.ImportSemanticSkillFromDirectory(skill, FunctionName(skill, prompt.Directory));
-        return kernel;
+        {
+            var skillName = FunctionName(skill, prompt.Directory);
+            if (skills.Count == 0 || skills.Contains(skillName.ToLower()))
+                kernel.ImportSemanticSkillFromDirectory(skill, skillName);
+        }
     }
 
     private static string FunctionName(string skill, DirectoryInfo? folder)

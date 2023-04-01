@@ -13,13 +13,13 @@ public class NativeSkillsImporter : ISkillsImporter
         _provider = provider;
     }
 
-    public void ImportSkills(IKernel kernel)
+    public void ImportSkills(IKernel kernel, IList<string> skills)
     {
         foreach (var skill in _skills)
         {
             var instance = _provider.GetService(skill);
-            if (instance != null) kernel.ImportSkill(instance, skill.Name);
+            if (instance != null && (skills.Count == 0 || skills.Contains(skill.Name.ToLower())))
+                kernel.ImportSkill(instance, skill.Name);
         }
     }
 }
-

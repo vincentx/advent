@@ -93,7 +93,7 @@ public class KernelExtensionTests
 
         new NativeSkillsImporter(new SkillOptions { NativeSkillTypes = skills },
                 serviceCollection.BuildServiceProvider())
-            .ImportSkills(kernel);
+            .ImportSkills(kernel, new List<string>());
         return kernel;
     }
 

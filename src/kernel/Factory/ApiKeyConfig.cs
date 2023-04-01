@@ -22,9 +22,9 @@ public class ApiKeyConfig
 
 public class SkillOptions
 {
-    public string SemanticSkillsFolder { get; init; }
+    public string SemanticSkillsFolder { get; init; } = "./skills";
 
-    public IList<Type> NativeSkillTypes { get; init; }
+    public IList<Type> NativeSkillTypes { get; init; } = new List<Type>();
 }
 
 internal static partial class Extensions
