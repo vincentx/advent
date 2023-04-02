@@ -1,11 +1,16 @@
 {
   "name": "advent-ai",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Advent provides easy access to your semantic kernel via HTTP API, console or WASM.",
   "main": "index.js",
   "bin": {
     "advent": "./index.js"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/vincentx/advent.git"
+  },
+  "homepage": "https://github.com/vincentx/advent",
   "scripts": {
     "build": "dotnet publish",
     "postbuild": "rm -rf bin && mkdir bin && cp -r -f src/kernel.api/bin/Debug/net7.0/publish/* bin/ && cp -r -f src/kernel.index/bin/Debug/net7.0/publish/* bin/"
