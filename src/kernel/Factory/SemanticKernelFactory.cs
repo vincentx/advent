@@ -14,13 +14,13 @@ public class SemanticKernelFactory
     private readonly ILogger _logger;
 
     public SemanticKernelFactory(NativeSkillsImporter native, SemanticSkillsImporter semantic, Config config,
-        IMemoryStore<float> memoryStore, ILogger logger)
+        IMemoryStore<float> memoryStore, ILoggerFactory logger)
     {
         _native = native;
         _semantic = semantic;
         _config = config;
         _memoryStore = memoryStore;
-        _logger = logger;
+        _logger = logger.CreateLogger<SemanticKernelFactory>();
     }
 
     public IKernel Create(ApiKey key, IList<string>? skills = null)

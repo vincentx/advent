@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.SemanticKernel;
 
 namespace Advent.Kernel.Factory;
@@ -11,7 +12,8 @@ public class SemanticSkillsImporterTests
             .Build();
 
         var folder = Path.GetFullPath($"{Directory.GetCurrentDirectory()}/../../../skills");
-        new SemanticSkillsImporter(new SkillOptions { SemanticSkillsFolders = new[] { folder } }).ImportSkills(kernel,
+        new SemanticSkillsImporter(new SkillOptions { SemanticSkillsFolders = new[] { folder } },
+            new NullLoggerFactory()).ImportSkills(kernel,
             new List<string>());
 
         var readOnlySkillCollection = kernel.Skills;
@@ -25,7 +27,8 @@ public class SemanticSkillsImporterTests
             .Build();
 
         var folder = Path.GetFullPath($"{Directory.GetCurrentDirectory()}/../../../skills");
-        new SemanticSkillsImporter(new SkillOptions { SemanticSkillsFolders = new[] { folder } }).ImportSkills(kernel,
+        new SemanticSkillsImporter(new SkillOptions { SemanticSkillsFolders = new[] { folder } },
+            new NullLoggerFactory()).ImportSkills(kernel,
             new List<string> { "otherskills" });
 
         var readOnlySkillCollection = kernel.Skills;
@@ -39,7 +42,8 @@ public class SemanticSkillsImporterTests
             .Build();
 
         var folder = Path.GetFullPath($"{Directory.GetCurrentDirectory()}/../../../skills");
-        new SemanticSkillsImporter(new SkillOptions { SemanticSkillsFolders = new[] { folder } }).ImportSkills(kernel,
+        new SemanticSkillsImporter(new SkillOptions { SemanticSkillsFolders = new[] { folder } },
+            new NullLoggerFactory()).ImportSkills(kernel,
             new List<string> { "devskill" });
 
         var readOnlySkillCollection = kernel.Skills;
