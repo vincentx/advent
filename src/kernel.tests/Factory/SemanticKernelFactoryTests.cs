@@ -34,7 +34,7 @@ public class KernelTests
     [Fact]
     public void should_load_all_core_skills()
     {
-        var skills = _factory.Create(new() { Text = "api-key" }).Skills.GetFunctionsView()
+        var skills = _factory.Create(new() { Text = "api-key", Embedding = "api-key"}).Skills.GetFunctionsView()
             .NativeFunctions.Keys;
         Assert.Contains(nameof(FileIOSkill), skills);
         Assert.Contains(nameof(HttpSkill), skills);
@@ -48,7 +48,7 @@ public class KernelTests
     [Fact]
     public void should_load_selected_core_skills()
     {
-        var skills = _factory.Create(new() { Text = "api-key" }, new List<string> { "fileioskill", "httpskill" }).Skills
+        var skills = _factory.Create(new() { Text = "api-key", Embedding = "api-key"}, new List<string> { "fileioskill", "httpskill" }).Skills
             .GetFunctionsView()
             .NativeFunctions.Keys;
         Assert.Contains(nameof(FileIOSkill), skills);
@@ -64,7 +64,7 @@ public class KernelTests
     [Fact]
     public void should_load_semantic_skills_from_skills_folder()
     {
-        var skills = _factory.Create(new() { Text = "api-key" }).Skills;
+        var skills = _factory.Create(new() { Text = "api-key", Embedding = "api-key"}).Skills;
         Assert.True(skills.HasFunction("DevSkill", "WriteCode"));
         Assert.False(skills.HasFunction("DevSkill", "NotAFunction"));
     }
@@ -72,7 +72,7 @@ public class KernelTests
     [Fact]
     public void should_load_native_skills_from_skills_folder()
     {
-        var skills = _factory.Create(new() { Text = "api-key" }).Skills;
+        var skills = _factory.Create(new() { Text = "api-key", Embedding = "api-key"}).Skills;
         Assert.True(skills.HasFunction("WebBrowserSkill", "OpenBrowserAsync"));
     }
 }
