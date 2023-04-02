@@ -1,6 +1,6 @@
 {
   "name": "advent-ai",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Advent provides easy access to your semantic kernel via HTTP API, console or WASM.",
   "main": "index.js",
   "bin": {

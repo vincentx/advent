@@ -11,7 +11,6 @@ REST API. And Advent uses [Qdrant](https://github.com/qdrant/qdrant) as the pers
 
 #### Install
 
-
 Using your favorite Node.js package management tool(mine is pnpm), run:
 
 ```pnpm
@@ -20,11 +19,34 @@ pnpm i advent-ai
 
 #### API server
 
-
 To use Advent API server for you awesome AI app, you can put your semantic and native skills
-under the `skills` folder. And start the Advent API. 
+under the `skills` folder. Provide a simple config file call `advent.json`:
 
-Make sure you have .NET Core and Qdrant installed, then run the following command:
+```json
+{
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information"
+    }
+  },
+  "Port": 6666,
+  "Skills": [
+    "./skills"
+  ],
+  "Models": {
+    "Text": "text-davinci-003",
+    "Chat": "gpt-3.5-turbo",
+    "Embedding": "text-embedding-ada-002"
+  },
+  "Memory": {
+    "Type": "Qdrant",
+    "Host": "http://localhost",
+    "Port": "6333"
+  }
+}
+```
+
+Make sure you have .NET Core and Qdrant installed, then run the following command to start the server:
 
 ```npm
 npx advent api
@@ -37,7 +59,7 @@ The API of the server is really simple:
 - Get detailed skill description
     - `GET` https://localhost:6666/api/skills/{skill}/{function}
 - Execute functions
-    - `POST` https://localhost:7071/api/asks?iterations={iterations}
+    - `POST` https://localhost:6666/api/asks?iterations={iterations}
 
 In order to execute functions, the following JSON must be provided.
 
@@ -81,12 +103,14 @@ run `TextSkill.Uppercase` and `TextSkill.TrimEnd` as piped functions:
 }
 ```
 
-If no functions specified, it will run `PlannerSkill.CreatePlan` and `PlannerSkill.ExecutePlan` by default (a.k.a, archive goal). 
-And the *iterations* query parameter will be used to determine how many times should the kernel try before the plan execute successfully.
+If no functions specified, it will run `PlannerSkill.CreatePlan` and `PlannerSkill.ExecutePlan` by default (a.k.a,
+archive goal).
+And the *iterations* query parameter will be used to determine how many times should the kernel try before the plan
+execute successfully.
 
 *skills* indicates which skills will be used during the execution. Since the planner tend to use
 most of the available functions, the result plan might be too long. And can't fit within the token limits.
-Then skills could be used to tell the kernel exactly which skills should the plan be based on. 
+Then skills could be used to tell the kernel exactly which skills should the plan be based on.
 
 Every API call should provide OpenAI API key via HTTP headers:
 
@@ -100,7 +124,7 @@ And if you use the same key for different purposes, you only need to provide `x-
 
 #### Embeddings indexing
 
-Semantic memory with "embeddings" is growing in popularity when a set of documents needed to be provide for LLM. 
+Semantic memory with "embeddings" is growing in popularity when a set of documents needed to be provide for LLM.
 To index documents, run the following command:
 
 ```npm
