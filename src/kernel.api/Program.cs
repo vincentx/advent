@@ -1,3 +1,4 @@
+using System.Net;
 using Advent.Kernel;
 using Advent.Kernel.Factory;
 using Advent.Kernel.WebApi;
@@ -21,8 +22,7 @@ foreach (var folder in skills)
 
 builder.Services.AddConsoleLogger(config);
 builder.Services.AddSemanticKernelFactory(config);
-
-builder.WebHost.ConfigureKestrel(options => { options.ListenAnyIP(int.Parse(config["Port"] ?? "5000")); });
+builder.WebHost.UseUrls($"http://localhost:{config["Port"] ?? "5000"}");
 
 var app = builder.Build();
 
