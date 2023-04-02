@@ -12,7 +12,7 @@ public class SemanticSkillsImporterTests
             .Build();
 
         var folder = Path.GetFullPath($"{Directory.GetCurrentDirectory()}/../../../skills");
-        new SemanticSkillsImporter(new SkillOptions { SemanticSkillsFolder = folder }).ImportSkills(kernel,
+        new SemanticSkillsImporter(new SkillOptions { SemanticSkillsFolders = new[] { folder } }).ImportSkills(kernel,
             new List<string>());
 
         var readOnlySkillCollection = kernel.Skills;
@@ -26,7 +26,7 @@ public class SemanticSkillsImporterTests
             .Build();
 
         var folder = Path.GetFullPath($"{Directory.GetCurrentDirectory()}/../../../skills");
-        new SemanticSkillsImporter(new SkillOptions { SemanticSkillsFolder = folder }).ImportSkills(kernel,
+        new SemanticSkillsImporter(new SkillOptions { SemanticSkillsFolders = new[] { folder } }).ImportSkills(kernel,
             new List<string> { "otherskills" });
 
         var readOnlySkillCollection = kernel.Skills;
@@ -40,7 +40,7 @@ public class SemanticSkillsImporterTests
             .Build();
 
         var folder = Path.GetFullPath($"{Directory.GetCurrentDirectory()}/../../../skills");
-        new SemanticSkillsImporter(new SkillOptions { SemanticSkillsFolder = folder }).ImportSkills(kernel,
+        new SemanticSkillsImporter(new SkillOptions { SemanticSkillsFolders = new[] { folder } }).ImportSkills(kernel,
             new List<string> { "devskill" });
 
         var readOnlySkillCollection = kernel.Skills;

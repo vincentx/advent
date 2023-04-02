@@ -9,20 +9,22 @@ public class SemanticKernelFactory
 {
     private readonly NativeSkillsImporter _native;
     private readonly SemanticSkillsImporter _semantic;
+    private readonly Config _config;
     private readonly ILogger _logger;
 
-    public SemanticKernelFactory(NativeSkillsImporter native, SemanticSkillsImporter semantic,
+    public SemanticKernelFactory(NativeSkillsImporter native, SemanticSkillsImporter semantic, Config config,
         ILogger logger)
     {
         _native = native;
         _semantic = semantic;
+        _config = config;
         _logger = logger;
     }
 
-    public IKernel Create(ApiKeyConfig config, IList<string>? skills = null)
+    public IKernel Create(ApiKey key, IList<string>? skills = null)
     {
         var selected = (skills ?? new List<string>()).Select(_ => _.ToLower()).ToList();
-        return new KernelBuilder().WithOpenAI(config).WithLogger(_logger).Build()
+        return new KernelBuilder().WithOpenAI(_config, key).WithLogger(_logger).Build()
             .RegistryCoreSkills(selected)
             .Register(_native, selected)
             .Register(_semantic, selected);
@@ -31,10 +33,13 @@ public class SemanticKernelFactory
 
 internal static partial class Extensions
 {
-    internal static KernelBuilder WithOpenAI(this KernelBuilder builder, ApiKeyConfig config) =>
+    internal static KernelBuilder WithOpenAI(this KernelBuilder builder, Config config, ApiKey api) =>
         builder.Configure(_ =>
         {
-            _.AddOpenAITextCompletion(config.Completion.Label, config.Completion.Model, config.Completion.Key);
+            if (api.Text != null) _.AddOpenAITextCompletion("completion", config.Models.Text, api.Text);
+            if (api.Embedding != null)
+                _.AddOpenAIEmbeddingGeneration("embedding", config.Models.Embedding, api.Embedding);
+            if (api.Chat != null) _.AddOpenAIChatCompletion("chat", config.Models.Chat, api.Chat);
         });
 
     internal static IKernel Register(this IKernel kernel, ISkillsImporter importer, IList<string> skills)

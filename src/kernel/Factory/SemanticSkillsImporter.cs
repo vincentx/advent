@@ -1,4 +1,3 @@
-using System.Collections;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.KernelExtensions;
 
@@ -6,16 +5,17 @@ namespace Advent.Kernel.Factory;
 
 public class SemanticSkillsImporter : ISkillsImporter
 {
-    private readonly string _folder;
+    private readonly string[] _folders;
 
     public SemanticSkillsImporter(SkillOptions skillOptions)
     {
-        _folder = skillOptions.SemanticSkillsFolder;
+        _folders = skillOptions.SemanticSkillsFolders;
     }
 
     public void ImportSkills(IKernel kernel, IList<string> skills)
     {
-        kernel.RegisterSemanticSkills(_folder, skills);
+        foreach (var folder in _folders)
+            kernel.RegisterSemanticSkills(folder, skills);
     }
 }
 

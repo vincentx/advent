@@ -34,8 +34,9 @@ public class ApiTests : IClassFixture<ApiFactory<Program>>
     {
         var httpClient = _factory.CreateClient();
 
-        httpClient.DefaultRequestHeaders.Add(Headers.CompletionKey, "key");
-        httpClient.DefaultRequestHeaders.Add(Headers.CompletionModel, "model");
+        httpClient.DefaultRequestHeaders.Add(Headers.TextCompletionKey, "key");
+        httpClient.DefaultRequestHeaders.Add(Headers.EmbeddingKey, "key");
+        
 
         var list = await httpClient.GetFromJsonAsync<SkillFunctionList>("/api/skills");
         Assert.Equal(43, list.Skills.Count);
@@ -58,8 +59,8 @@ public class ApiTests : IClassFixture<ApiFactory<Program>>
     {
         var httpClient = _factory.CreateClient();
 
-        httpClient.DefaultRequestHeaders.Add(Headers.CompletionKey, "key");
-        httpClient.DefaultRequestHeaders.Add(Headers.CompletionModel, "model");
+        httpClient.DefaultRequestHeaders.Add(Headers.TextCompletionKey, "key");
+        httpClient.DefaultRequestHeaders.Add(Headers.EmbeddingKey, "key");
 
         var function = await httpClient.GetFromJsonAsync<FunctionView>("/api/skills/timeskill/timezonename");
         Assert.Equal("TimeZoneName", function.Name);
@@ -75,8 +76,8 @@ public class ApiTests : IClassFixture<ApiFactory<Program>>
     {
         var httpClient = _factory.CreateClient();
 
-        httpClient.DefaultRequestHeaders.Add(Headers.CompletionKey, "key");
-        httpClient.DefaultRequestHeaders.Add(Headers.CompletionModel, "model");
+        httpClient.DefaultRequestHeaders.Add(Headers.TextCompletionKey, "key");
+        httpClient.DefaultRequestHeaders.Add(Headers.EmbeddingKey, "key");
 
         var response = await httpClient.PostAsJsonAsync("/api/asks", new Message()
         {
@@ -126,8 +127,7 @@ public class ApiTests : IClassFixture<ApiFactory<Program>>
     {
         var httpClient = _factory.CreateClient();
 
-        httpClient.DefaultRequestHeaders.Add(Headers.CompletionKey, "key");
-        httpClient.DefaultRequestHeaders.Add(Headers.CompletionModel, "model");
+        httpClient.DefaultRequestHeaders.Add(Headers.TextCompletionKey, "key");
 
         var response = await httpClient.PostAsJsonAsync("/api/asks", new Message()
         {
@@ -153,8 +153,8 @@ public class ApiTests : IClassFixture<ApiFactory<Program>>
     {
         var httpClient = _factory.CreateClient();
 
-        httpClient.DefaultRequestHeaders.Add(Headers.CompletionKey, "key");
-        httpClient.DefaultRequestHeaders.Add(Headers.CompletionModel, "model");
+        httpClient.DefaultRequestHeaders.Add(Headers.TextCompletionKey, "key");
+        httpClient.DefaultRequestHeaders.Add(Headers.EmbeddingKey, "key");
 
         var response = await httpClient.PostAsJsonAsync("/api/asks", new Message()
         {

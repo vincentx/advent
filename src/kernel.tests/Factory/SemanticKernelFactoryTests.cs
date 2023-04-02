@@ -1,3 +1,6 @@
+using System.Text;
+using System.Text.Json;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -15,18 +18,23 @@ public class KernelTests
     public KernelTests(ITestOutputHelper testOutputHelper)
     {
         _testOutputHelper = testOutputHelper;
-        var folder = Path.GetFullPath($"{Directory.GetCurrentDirectory()}/../../../skills");
+
+        var config = new ConfigurationBuilder().AddJsonStream(new MemoryStream(Encoding.UTF8.GetBytes(
+            JsonSerializer.Serialize(new Config()
+            {
+                Skills = new[] { Path.GetFullPath($"{Directory.GetCurrentDirectory()}/../../../skills") }
+            })))).Build();
+
         _factory = new HostBuilder()
             .ConfigureServices(services => { services.AddSingleton<ILogger>(NullLogger.Instance); })
-            .ConfigureAdventKernelDefaults(folder).Build().Services
+            .ConfigureAdventKernelDefaults(config).Build().Services
             .GetService<SemanticKernelFactory>()!;
     }
 
     [Fact]
     public void should_load_all_core_skills()
     {
-        var skills = _factory.Create(new()
-                { Completion = new() { Label = "label", Model = "model", Key = "api-key" } }).Skills.GetFunctionsView()
+        var skills = _factory.Create(new() { Text = "api-key" }).Skills.GetFunctionsView()
             .NativeFunctions.Keys;
         Assert.Contains(nameof(FileIOSkill), skills);
         Assert.Contains(nameof(HttpSkill), skills);
@@ -40,10 +48,8 @@ public class KernelTests
     [Fact]
     public void should_load_selected_core_skills()
     {
-        var skills = _factory.Create(new()
-                    { Completion = new() { Label = "label", Model = "model", Key = "api-key" } },
-                new List<string> { "fileioskill", "httpskill" }
-            ).Skills.GetFunctionsView()
+        var skills = _factory.Create(new() { Text = "api-key" }, new List<string> { "fileioskill", "httpskill" }).Skills
+            .GetFunctionsView()
             .NativeFunctions.Keys;
         Assert.Contains(nameof(FileIOSkill), skills);
         Assert.Contains(nameof(HttpSkill), skills);
@@ -58,8 +64,7 @@ public class KernelTests
     [Fact]
     public void should_load_semantic_skills_from_skills_folder()
     {
-        var skills = _factory.Create(new()
-            { Completion = new() { Label = "label", Model = "model", Key = "api-key" } }).Skills;
+        var skills = _factory.Create(new() { Text = "api-key" }).Skills;
         Assert.True(skills.HasFunction("DevSkill", "WriteCode"));
         Assert.False(skills.HasFunction("DevSkill", "NotAFunction"));
     }
@@ -67,8 +72,7 @@ public class KernelTests
     [Fact]
     public void should_load_native_skills_from_skills_folder()
     {
-        var skills = _factory.Create(new()
-            { Completion = new() { Label = "label", Model = "model", Key = "api-key" } }).Skills;
+        var skills = _factory.Create(new() { Text = "api-key" }).Skills;
         Assert.True(skills.HasFunction("WebBrowserSkill", "OpenBrowserAsync"));
     }
 }

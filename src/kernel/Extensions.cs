@@ -1,31 +1,49 @@
 using Advent.Kernel.Factory;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.SemanticKernel;
+using Microsoft.SemanticKernel.Memory;
 using Microsoft.SemanticKernel.Orchestration;
-using Microsoft.SemanticKernel.Orchestration.Extensions;
 using Microsoft.SemanticKernel.SkillDefinition;
 
 namespace Advent.Kernel;
 
 public static class Extensions
 {
-    public static IHostBuilder ConfigureAdventKernelDefaults(this IHostBuilder builder, string folder) =>
-        builder.ConfigureServices(services => { services.AddSemanticKernelFactory(folder); });
+    public static IHostBuilder ConfigureAdventKernelDefaults(this IHostBuilder builder, IConfiguration configuration) =>
+        builder.ConfigureServices(services =>
+        {
+            services.AddSemanticKernelFactory(configuration);
+            services.AddConsoleLogger(configuration);
+        });
 
-    public static void AddSemanticKernelFactory(this IServiceCollection services, string folder)
+    public static void AddSemanticKernelFactory(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddSingleton<ILogger>(NullLogger.Instance);
+        var config = new Config();
+        configuration.Bind(config);
 
-        var options = folder.ToSkillOptions();
-        services.AddSingleton(options);
+        var options = config.Skills.ToSkillOptions();
         foreach (var skillType in options.NativeSkillTypes) services.AddSingleton(skillType);
+
+        services.AddSingleton(options);
+        services.AddSingleton(config);
         services.AddSingleton<NativeSkillsImporter>();
         services.AddSingleton<SemanticSkillsImporter>();
         services.AddSingleton<SemanticKernelFactory>();
         services.AddSingleton(typeof(IPlanExecutor), typeof(DefaultPlanExecutor));
+        services.AddSingleton<IMemoryStore<float>>(new VolatileMemoryStore());
+    }
+
+    public static void AddConsoleLogger(this IServiceCollection services, IConfiguration configuration)
+    {
+        ILoggerFactory factory = LoggerFactory.Create(builder =>
+        {
+            builder.AddConfiguration(configuration.GetSection("Logging"));
+            builder.AddConsole();
+        });
+        services.AddSingleton<ILogger>(factory.CreateLogger<object>());
     }
 
     public static IList<FunctionView> ToSkills(this IKernel kernel)

@@ -5,13 +5,22 @@ using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.SemanticKernel;
 
+
+var config = new ConfigurationBuilder()
+    .AddJsonFile("appsettings.json", true)
+    .AddJsonFile("advent.json", true).Build();
+
 var builder = WebApplication.CreateBuilder(args);
 
-var skillsFolder = "./skills";
+var skills = config.GetSection("Skills").Get<string[]>() ?? new[] { "./skills" };
 
-if (!Directory.Exists(skillsFolder)) Directory.CreateDirectory(skillsFolder);
+foreach (var folder in skills)
+{
+    if (!Directory.Exists(folder)) Directory.CreateDirectory(folder);
+}
 
-builder.Services.AddSemanticKernelFactory(skillsFolder);
+builder.Services.AddConsoleLogger(config);
+builder.Services.AddSemanticKernelFactory(config);
 
 var app = builder.Build();
 
