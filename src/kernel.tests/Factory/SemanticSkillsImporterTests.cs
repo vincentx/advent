@@ -1,5 +1,4 @@
 using Microsoft.SemanticKernel;
-using Microsoft.SemanticKernel.Configuration;
 
 namespace Advent.Kernel.Factory;
 
@@ -8,7 +7,7 @@ public class SemanticSkillsImporterTests
     [Fact]
     public void should_import_semantic_skills_from_folder()
     {
-        var kernel = new KernelBuilder().Configure(c => { c.AddOpenAITextCompletion("label", "model", "key"); })
+        var kernel = new KernelBuilder().Configure(c => { c.AddOpenAITextCompletionService("label", "model", "key"); })
             .Build();
 
         var folder = Path.GetFullPath($"{Directory.GetCurrentDirectory()}/../../../skills");
@@ -22,7 +21,7 @@ public class SemanticSkillsImporterTests
     [Fact]
     public void should_not_import_semantic_skills_from_folder_if_skill_not_selected()
     {
-        var kernel = new KernelBuilder().Configure(c => { c.AddOpenAITextCompletion("label", "model", "key"); })
+        var kernel = new KernelBuilder().Configure(c => { c.AddOpenAITextCompletionService("label", "model", "key"); })
             .Build();
 
         var folder = Path.GetFullPath($"{Directory.GetCurrentDirectory()}/../../../skills");
@@ -36,7 +35,7 @@ public class SemanticSkillsImporterTests
     [Fact]
     public void should_import_semantic_skills_from_folder_if_skill_selected()
     {
-        var kernel = new KernelBuilder().Configure(c => { c.AddOpenAITextCompletion("label", "model", "key"); })
+        var kernel = new KernelBuilder().Configure(c => { c.AddOpenAITextCompletionService("label", "model", "key"); })
             .Build();
 
         var folder = Path.GetFullPath($"{Directory.GetCurrentDirectory()}/../../../skills");

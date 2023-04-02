@@ -1,7 +1,7 @@
 using Microsoft.Extensions.Logging;
 using Microsoft.SemanticKernel;
-using Microsoft.SemanticKernel.Configuration;
 using Microsoft.SemanticKernel.CoreSkills;
+using Microsoft.SemanticKernel.Memory;
 
 namespace Advent.Kernel.Factory;
 
@@ -10,24 +10,28 @@ public class SemanticKernelFactory
     private readonly NativeSkillsImporter _native;
     private readonly SemanticSkillsImporter _semantic;
     private readonly Config _config;
+    private readonly IMemoryStore<float> _memoryStore;
     private readonly ILogger _logger;
 
     public SemanticKernelFactory(NativeSkillsImporter native, SemanticSkillsImporter semantic, Config config,
-        ILogger logger)
+        IMemoryStore<float> memoryStore, ILogger logger)
     {
         _native = native;
         _semantic = semantic;
         _config = config;
+        _memoryStore = memoryStore;
         _logger = logger;
     }
 
     public IKernel Create(ApiKey key, IList<string>? skills = null)
     {
         var selected = (skills ?? new List<string>()).Select(_ => _.ToLower()).ToList();
-        return new KernelBuilder().WithOpenAI(_config, key).WithLogger(_logger).Build()
+        var kernel = new KernelBuilder().WithOpenAI(_config, key).WithLogger(_logger).Build()
             .RegistryCoreSkills(selected)
             .Register(_native, selected)
             .Register(_semantic, selected);
+        kernel.UseMemory("embedding", _memoryStore);
+        return kernel;
     }
 }
 
@@ -36,10 +40,10 @@ internal static partial class Extensions
     internal static KernelBuilder WithOpenAI(this KernelBuilder builder, Config config, ApiKey api) =>
         builder.Configure(_ =>
         {
-            if (api.Text != null) _.AddOpenAITextCompletion("completion", config.Models.Text, api.Text);
+            if (api.Text != null) _.AddOpenAITextCompletionService("text", config.Models.Text, api.Text);
             if (api.Embedding != null)
-                _.AddOpenAIEmbeddingGeneration("embedding", config.Models.Embedding, api.Embedding);
-            if (api.Chat != null) _.AddOpenAIChatCompletion("chat", config.Models.Chat, api.Chat);
+                _.AddOpenAIEmbeddingGenerationService("embedding", config.Models.Embedding, api.Embedding);
+            if (api.Chat != null) _.AddOpenAIChatCompletionService("chat", config.Models.Chat, api.Chat);
         });
 
     internal static IKernel Register(this IKernel kernel, ISkillsImporter importer, IList<string> skills)

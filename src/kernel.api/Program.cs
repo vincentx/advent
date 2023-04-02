@@ -5,8 +5,8 @@ using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.SemanticKernel;
 
-
 var config = new ConfigurationBuilder()
+    .SetBasePath(Environment.CurrentDirectory)
     .AddJsonFile("appsettings.json", true)
     .AddJsonFile("advent.json", true).Build();
 
@@ -22,7 +22,10 @@ foreach (var folder in skills)
 builder.Services.AddConsoleLogger(config);
 builder.Services.AddSemanticKernelFactory(config);
 
+builder.WebHost.ConfigureKestrel(options => { options.ListenAnyIP(int.Parse(config["Port"] ?? "5000")); });
+
 var app = builder.Build();
+
 
 app.MapGet("/api/skills", ([FromServices] SemanticKernelFactory factory, HttpRequest request) =>
     request.TryGetKernel(factory, out var kernel)
@@ -59,7 +62,7 @@ app.MapPost("/api/asks",
             SemanticKernelFactory factory, IPlanExecutor planExecutor, HttpRequest request) =>
         request.TryGetKernel(factory, out var kernel, message.Skills)
             ? (message.Pipeline == null || message.Pipeline.Count == 0
-                ? await planExecutor.Execute(kernel, message, iterations ?? 10)
+                ? await planExecutor.Execute(kernel!, message, iterations ?? 10)
                 : await kernel!.InvokePipedFunctions(message)).ToResult(message.Skills)
             : Results.BadRequest("API config is not valid"));
 

@@ -1,0 +1,14 @@
+lockfileVersion: 5.4
+
+specifiers:
+  commander: ^10.0.0
+
+dependencies:
+  commander: 10.0.0
+
+packages:
+
+  /commander/10.0.0:
+    resolution: {integrity: sha512-zS5PnTI22FIRM6ylNW8G4Ap0IEOyk62fhLSD0+uHRT9McRCLGpkVNvao4bjimpK/GShynyQkFFxHhwMcETmduA==}
+    engines: {node: '>=14'}
+    dev: false

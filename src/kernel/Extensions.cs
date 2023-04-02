@@ -7,6 +7,7 @@ using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Memory;
 using Microsoft.SemanticKernel.Orchestration;
 using Microsoft.SemanticKernel.SkillDefinition;
+using Microsoft.SemanticKernel.Skills.Memory.Qdrant;
 
 namespace Advent.Kernel;
 
@@ -33,16 +34,21 @@ public static class Extensions
         services.AddSingleton<SemanticSkillsImporter>();
         services.AddSingleton<SemanticKernelFactory>();
         services.AddSingleton(typeof(IPlanExecutor), typeof(DefaultPlanExecutor));
-        services.AddSingleton<IMemoryStore<float>>(new VolatileMemoryStore());
+        
+        services.AddSingleton<IMemoryStore<float>>(
+            config.Memory.Type == "Volatile"
+                ? new VolatileMemoryStore()
+                : new QdrantMemoryStore(config.Memory.Host, config.Memory.Port, 1536));
     }
 
     public static void AddConsoleLogger(this IServiceCollection services, IConfiguration configuration)
     {
-        ILoggerFactory factory = LoggerFactory.Create(builder =>
+        var factory = LoggerFactory.Create(builder =>
         {
             builder.AddConfiguration(configuration.GetSection("Logging"));
             builder.AddConsole();
         });
+        services.AddSingleton(factory);
         services.AddSingleton<ILogger>(factory.CreateLogger<object>());
     }
 

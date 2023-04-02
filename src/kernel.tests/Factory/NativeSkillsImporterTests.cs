@@ -12,8 +12,7 @@ public class NativeSkillsImporterTests
         var kernel = new KernelBuilder().Build();
         var serviceCollection = new ServiceCollection();
         serviceCollection.AddSingleton(typeof(TestNativeSkill), typeof(TestNativeSkill));
-
-
+        
         new NativeSkillsImporter(new SkillOptions { NativeSkillTypes = new List<Type> { typeof(TestNativeSkill) } },
                 serviceCollection.BuildServiceProvider())
             .ImportSkills(kernel, new List<string>());

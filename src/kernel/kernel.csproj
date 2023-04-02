@@ -9,7 +9,11 @@
 
     <ItemGroup>
         <PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.1" />
-        <PackageReference Include="Microsoft.SemanticKernel" Version="0.9.61.1-preview" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\semantic-kernel\dotnet\src\SemanticKernel.Skills\Skills.Memory.Qdrant\Skills.Memory.Qdrant.csproj" />
+      <ProjectReference Include="..\..\semantic-kernel\dotnet\src\SemanticKernel\SemanticKernel.csproj" />
     </ItemGroup>
 
 </Project>

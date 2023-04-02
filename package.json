@@ -1,0 +1,29 @@
+{
+  "name": "advent-ai",
+  "version": "1.0.0",
+  "description": "Advent provides easy access to your semantic kernel via HTTP API, console or WASM.",
+  "main": "index.js",
+  "bin": {
+    "advent": "./index.js"
+  },
+  "scripts": {
+    "build": "dotnet publish",
+    "postbuild": "rm -rf bin && mkdir bin && cp -r -f src/kernel.api/bin/Debug/net7.0/publish/* bin/ && cp -r -f src/kernel.index/bin/Debug/net7.0/publish/* bin/"
+  },
+  "keywords": [
+    "AI",
+    "Semantic Kernel",
+    "ChatGPT",
+    "OpenAI"
+  ],
+  "files": [
+    "index.js",
+    "bin",
+    "advent.json"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "commander": "^10.0.0"
+  }
+}
